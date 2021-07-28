@@ -6,7 +6,9 @@
       <el-header>
         <BbsHeader></BbsHeader>
       </el-header>
-      <el-main>Main</el-main>
+      <el-main>
+        <router-view/>
+      </el-main>
       <el-footer>Footer</el-footer>
     </el-container>
   </el-container>
@@ -17,7 +19,7 @@ import BbsHeader from './BbsHeader'
 
 export default {
   components: {
-    'BbsHeader': BbsHeader
+    'BbsHeader': BbsHeader,
   },
   name: 'index'
 }
