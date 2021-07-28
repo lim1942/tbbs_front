@@ -1,7 +1,7 @@
 <template>
 <div class="user_con">
-  <el-button type="danger"><router-link :to="{ name: 'index'}">关闭</router-link></el-button>
-  <el-button v-on:click="login=!login" type="success">切换登陆/注册</el-button>
+  <el-button type="danger" size="mini" round @click="goIndex">返回首页</el-button>
+  <el-button @click="login=!login" type="success">切换登陆/注册</el-button>
   <BbsLogin v-show="login" class="form"></BbsLogin>
   <BbsRegister v-show="!login" class="form"></BbsRegister>
 </div>
@@ -12,6 +12,11 @@ import BbsLogin from './BbsLogin'
 import BbsRegister from './BbsRegister'
 
 export default {
+  methods: {
+    goIndex () {
+      this.$router.push('/')
+    }
+  },
   components: {
     'BbsLogin': BbsLogin,
     'BbsRegister': BbsRegister

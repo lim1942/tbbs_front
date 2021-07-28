@@ -17,7 +17,7 @@
     </el-col>
     <el-col :span="4">
       <div v-if="!info"><router-link :to="{ name: 'user'}">登录/注册</router-link></div>
-      <div v-else>你好！{{info.a}}/{{info.b}} 注销</div>
+      <div v-else>你好！{{info.username}}/{{info.email}} 注销</div>
     </el-col>
   </el-row>
 </template>

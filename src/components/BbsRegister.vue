@@ -41,14 +41,18 @@
       ></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="submitForm('ruleForm')">注册</el-button>
+      <el-button type="primary" @click="create_user">注册</el-button>
     </el-form-item>
   </el-form>
 </template>
 <script>
+import api from '@/api'
 export default {
   name: 'BbsLogin',
   methods: {
+    create_user: function () {
+      api.post('users/manage', this.ruleForm)
+    },
     validateUsername: (rule, value, callback) => {
       if (value === '') {
         callback(new Error('用户名不能为空'))
@@ -71,7 +75,7 @@ export default {
       }
     },
     validatePassword2: (rule, value, callback) => {
-      if (value !== this.password) {
+      if (value !== this.ruleForm.password) {
         callback(new Error('两次密码输入不一致'))
       } else {
         callback()
