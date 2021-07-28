@@ -37,6 +37,7 @@
 </template>
 <script>
 import api from '@/api'
+import {cookie} from '@/tool/index'
 export default {
   name: 'BbsLogin',
   methods: {
@@ -48,17 +49,13 @@ export default {
           // 提示登录成功
           this.$notify({
             title: '登录成功',
-            message: response.data.info['username'],
+            message: JSON.parse(response.data.info)['username'],
             type: 'success',
             duration: 10000
           })
-          // 设置cookie
-          var oDate=new Date();
-          oDate.setDate(oDate.getDate())
-          document.cookie='session_key=11f89552ebdb4c198cddf76df988070c' + '; expires=' + oDate.toDateString()
-          // document.cookie = 'session_key=11f89552ebdb4c198cddf76df988070c;'
           // 记录登录用户信息
-          window.localStorage.setItem('11f89552ebdb4c198cddf76df988070c', JSON.stringify(response.data.info))
+          alert(typeof response.data.info)
+          window.localStorage.setItem(cookie('session_key'), response.data.info)
           // 清空表单
           this.clear_form()
           // 切换到首页,耦合性有些强，大项目不可以这么调用父类的方法

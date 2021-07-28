@@ -4,7 +4,7 @@
     <el-aside width="200px">Aside</el-aside>
     <el-container>
       <el-header>
-        <BbsHeader></BbsHeader>
+        <BbsHeader :userinfo="userinfo"></BbsHeader>
       </el-header>
       <el-main>
         <router-view/>
@@ -16,12 +16,26 @@
 
 <script>
 import BbsHeader from './BbsHeader'
+import {cookie} from '../tool'
 
 export default {
   components: {
-    'BbsHeader': BbsHeader,
+    'BbsHeader': BbsHeader
   },
-  name: 'index'
+  name: 'index',
+  mounted () {
+    const sessionKey = cookie('session_key')
+    if (sessionKey) {
+      this.userinfo = JSON.parse(window.localStorage.getItem(sessionKey))
+    } else {
+      this.userinfo = null
+    }
+  },
+  data () {
+    return {
+      userinfo: null
+    }
+  }
 }
 </script>
 
