@@ -6,12 +6,12 @@
     label-width="100px"
     class="demo-ruleForm"
   >
-    <el-form-item prop="user" label="用户名/邮箱">
+    <el-form-item prop="username_email" label="用户名/邮箱">
       <el-input
         type="text"
         placeholder="请输用户名或者邮箱号"
         required="required"
-        v-model="ruleForm.user"
+        v-model="ruleForm.username_email"
         prefix-icon="el-icon-user-solid"
       ></el-input>
     </el-form-item>
@@ -24,41 +24,83 @@
         @keyup.enter.native="toSubmitForm('ruleForm')"
       ></el-input>
     </el-form-item>
+    <el-form-item prop="remember" label="记住我">
+      <el-switch v-model="ruleForm.remember"
+        active-color="#13ce66"
+        inactive-color="grey">
+      </el-switch>
+    </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+      <el-button type="primary" @click="do_login('ruleForm')">登录</el-button>
     </el-form-item>
   </el-form>
 </template>
 <script>
+import api from '@/api'
 export default {
   name: 'BbsLogin',
   methods: {
-    validateUser: (rule, value, callback) => {
-      if (value === '') {
+    do_login: function (formName) {
+      const ResponseHandle = (response) => {
+        if ([200, 201, 202].indexOf(response.status) !== -1) {
+          // 提示登录成功
+          this.$notify({
+            title: '登录成功',
+            message: response.data.info['username'],
+            type: 'success',
+            duration: 10000
+          })
+          // 清空表单
+          this.clear_form()
+          // 切换到首页,耦合性有些强，大项目不可以这么调用父类的方法
+          this.$parent.goIndex()
+        } else {
+          // 注册校验失败
+          this.$notify({
+            title: '登录错误',
+            message: response.data.msg,
+            type: 'warning',
+            duration: 10000
+          })
+        }
+      }
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          api.post('users/login/', this.ruleForm).then(response => (ResponseHandle(response)))
+        } else {
+          return false
+        }
+      })
+    },
+    clear_form: function () {
+      this.ruleForm.username_email = null
+      this.ruleForm.password = null
+    }
+  },
+  data () {
+    const validateUser = (rule, value, callback) => {
+      if (!value) {
         callback(new Error('用户名或者邮箱不能为空'))
       } else {
         callback()
       }
-    },
-    validatePassword: (rule, value, callback) => {
-      if (value === '') {
+    }
+    const validatePassword = (rule, value, callback) => {
+      if (!value) {
         callback(new Error('请输入密码'))
       } else {
         callback()
       }
     }
-  },
-  data () {
     return {
-      // 获取url地址后面的参数
-      urlQuery: '',
       ruleForm: {
-        user: '',
-        password: ''
+        username_email: null,
+        password: null,
+        remember: false
       },
       rules: {
-        user: [{required: true, validator: this.validateUser, trigger: 'blur'}],
-        password: [{required: true, validator: this.validatePassword, trigger: 'blur'}]
+        username_email: [{required: true, validator: validateUser}],
+        password: [{required: true, validator: validatePassword}]
       }
     }
   }

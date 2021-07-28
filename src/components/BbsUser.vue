@@ -2,8 +2,8 @@
 <div class="user_con">
   <el-button type="danger" size="mini" round @click="goIndex">返回首页</el-button>
   <el-button @click="login=!login" type="success">切换登陆/注册</el-button>
-  <BbsLogin v-show="login" class="form"></BbsLogin>
-  <BbsRegister v-show="!login" class="form"></BbsRegister>
+  <BbsLogin v-show="login" class="form" ref="BbsLogin"></BbsLogin>
+  <BbsRegister v-show="!login" class="form" ref="BbsRegister"></BbsRegister>
 </div>
 </template>
 
@@ -15,6 +15,9 @@ export default {
   methods: {
     goIndex () {
       this.$router.push('/')
+    },
+    setLoginTure () {
+      this.login = this
     }
   },
   components: {
