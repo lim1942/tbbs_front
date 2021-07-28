@@ -41,6 +41,8 @@ export default {
   name: 'BbsLogin',
   methods: {
     do_login: function (formName) {
+      // 登录时清空浏览器本地缓存
+      window.localStorage.clear()
       const ResponseHandle = (response) => {
         if ([200, 201, 202].indexOf(response.status) !== -1) {
           // 提示登录成功
@@ -50,6 +52,13 @@ export default {
             type: 'success',
             duration: 10000
           })
+          // 设置cookie
+          var oDate=new Date();
+          oDate.setDate(oDate.getDate())
+          document.cookie='session_key=11f89552ebdb4c198cddf76df988070c' + '; expires=' + oDate.toDateString()
+          // document.cookie = 'session_key=11f89552ebdb4c198cddf76df988070c;'
+          // 记录登录用户信息
+          window.localStorage.setItem('11f89552ebdb4c198cddf76df988070c', JSON.stringify(response.data.info))
           // 清空表单
           this.clear_form()
           // 切换到首页,耦合性有些强，大项目不可以这么调用父类的方法
