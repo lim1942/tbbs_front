@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <!--侧边栏-->
-    <el-aside width="200px">Aside</el-aside>
+    <el-aside width="200px"><el-button onclick="window.location.reload();">刷新</el-button></el-aside>
     <el-container>
       <el-header>
         <BbsHeader :userinfo="userinfo"></BbsHeader>
@@ -9,7 +9,6 @@
       <el-main>
         <router-view/>
       </el-main>
-      <el-footer>Footer</el-footer>
     </el-container>
   </el-container>
 </template>

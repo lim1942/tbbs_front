@@ -54,7 +54,6 @@ export default {
             duration: 10000
           })
           // 记录登录用户信息
-          alert(typeof response.data.info)
           window.localStorage.setItem(cookie('session_key'), response.data.info)
           // 清空表单
           this.clear_form()

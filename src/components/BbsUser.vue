@@ -10,6 +10,7 @@
 <script>
 import BbsLogin from './BbsLogin'
 import BbsRegister from './BbsRegister'
+import {cookie} from '../tool'
 
 export default {
   methods: {
@@ -29,6 +30,14 @@ export default {
     return {
       login: true
     }
+  },
+  mounted () {
+    const sessionKey = cookie('session_key')
+    if (sessionKey) {
+      if (window.localStorage.getItem(sessionKey)) {
+        this.$router.push('/')
+      }
+    }
   }
 }
 </script>
@@ -44,5 +53,8 @@ export default {
 }
 .form{
   text-align: left;
+}
+.el-button{
+  margin-bottom: 40px;
 }
 </style>
