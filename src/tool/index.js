@@ -22,13 +22,6 @@ export const cookie = function (name, value, days) {
   }
 }
 
-export const validate = {
-  mobile (telephone) {
-    let pattern = /^(1.[0-9]{9})$/
-    return pattern.test(telephone)
-  }
-}
-
 var minute = 1000 * 60
 var hour = minute * 60
 var day = hour * 24
@@ -53,7 +46,7 @@ export const handleDate = (dateTimeStamp) => {
     result = '昨天'
   } else if (hourC >= 1) {
     result = '' + parseInt(hourC) + '小时前'
-  } else if (minC >= 5) {
+  } else if (minC >= 1) {
     result = '' + parseInt(minC) + '分钟前'
   } else {
     result = '刚刚'

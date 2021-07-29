@@ -1,6 +1,8 @@
 import axios from 'axios'
+import Router from '../router';
 import config from './config'
-import {Loading} from 'element-ui'
+import {Loading, Message, MessageBox} from 'element-ui'
+import {cookie} from '../tool'
 axios.interceptors.response.use(response => response, error => Promise.resolve(error.response))
 axios.defaults.withCredentials = true
 axios.defaults.crossDomain = true
@@ -49,6 +51,29 @@ export default {
       url: config.api + url,
       params,
       timeout: config.timeout
+    })
+  },
+  postComment (parent, message) {
+    MessageBox.prompt(message, '请输入200字以内', {
+      inputType: 'textarea',
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      inputErrorMessage: '字数过多'
+    }).then(({ value }) => {
+      const ResponseHandle = (response) => {
+        if ([200, 201, 202].indexOf(response.status) !== -1) {
+          Message({type: 'success', message: '发布成功'})
+          window.location.reload()
+        } else if (response.status === 403) {
+          Message('无效用户，请重新登录')
+          cookie('session_key', '')
+        } else {
+          Message(JSON.stringify(response.data))
+        }
+      }
+      this.post('comment/entry/', {parent: parent, msg: value}).then(response => (ResponseHandle(response)))
+    }).catch(() => {
+      Message('取消')
     })
   }
 }

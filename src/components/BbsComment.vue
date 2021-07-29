@@ -10,8 +10,7 @@
       </div>
     </div>
     <div style="display: inline-block;float: right;padding-top:15px">
-      <el-button size="mini" plain >回复</el-button>
-      <el-button size="mini" plain @click="openDrawer(item)">查看详情</el-button>
+      <el-button size="mini" plain @click="openDrawer(item)">查看/回复</el-button>
     </div>
   </el-row>
   <el-pagination
@@ -24,13 +23,6 @@
     layout="total, sizes, prev, pager, next, jumper"
     :total="total">
   </el-pagination>
-  <el-drawer
-    size='50%'
-    title="详情"
-    :visible.sync="drawer"
-    destroy-on-close>
-    <BbsCommentDrawer :drawer_item="drawer_item"></BbsCommentDrawer>
-  </el-drawer>
 </div>
 </template>
 
@@ -69,8 +61,7 @@ export default {
       api.get('comment/entry/', {page: this.page, size: this.size}).then(response => (ResponseHandle(response)))
     },
     openDrawer: function (item) {
-      this.drawer_item = item
-      this.drawer = true
+      this.$router.push('/commentDrawer/' + item.id)
     }
   },
   data () {
@@ -79,8 +70,6 @@ export default {
       size: 10,
       page: 1,
       comment: [],
-      drawer: false,
-      drawer_item: null
     }
   },
   mounted () {
@@ -111,5 +100,6 @@ export default {
   font-size: 10px;
   }.comment_bottom_item{
     margin-right: 20px;
+    margin-left: 5px;
      }
 </style>

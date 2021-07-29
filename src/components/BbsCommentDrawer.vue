@@ -1,18 +1,18 @@
 <template>
 <div>
-  <div class="drawer_item">
+  <div class="drawer_item" @click="addNewComment(drawer_item)">
     <div class="comment_content">{{drawer_item.msg}}</div>
     <div class="comment_bottom">
       <i class="el-icon-user-solid"></i><span class="comment_bottom_item">{{ drawer_item.pub_username }} </span>
       <i class="el-icon-date"></i><span class="comment_bottom_item">{{handleDate(Date.parse(drawer_item.created_time))}}</span>
-      <i class="el-icon-chat-line-round"></i><span class="comment_bottom_item">{{drawer_item.child_cnt}} <em>点击评论</em></span>
+      <i class="el-icon-chat-line-round"></i><span class="comment_bottom_item">{{drawer_item.child_cnt}} <em>点击进行评论</em></span>
     </div>
   </div>
   <div v-for="(item,i) in drawer_comment" :class="i%2===0?'bg1':'bg2'">
     <div class="comment_content"><i class="el-icon-user-solid"></i><em style="color: blue">{{getCommentPrefix(item)}}</em> 说： {{item.msg}}</div>
     <div class="comment_content">
       <i class="el-icon-date"></i><span class="comment_bottom_item">{{handleDate(Date.parse(item.created_time))}}</span>
-      <el-button size="mini" plain style="float: right" circle>回复</el-button>
+      <el-button size="mini" plain style="float: right" circle @click="addNewComment(item)">回复</el-button>
     </div>
   </div>
   <el-pagination
@@ -30,11 +30,12 @@
 
 <script>
 import api from '@/api'
-import {handleDate} from '@/tool/index'
+import {handleDate, cookie} from '@/tool/index'
 export default {
   name: 'BbsCommentDrawer',
   data () {
     return {
+      drawer_item: null,
       drawer_total: 0,
       drawer_size: 10,
       drawer_page: 1,
@@ -56,7 +57,7 @@ export default {
           })
         }
       }
-      api.get('comment/entry/', {root: this.drawer_item.id, page: this.drawer_page, size: this.drawer_size}).then(response => (ResponseHandle(response)))
+      api.get('comment/entry/', {root: this.drawer_item_id, page: this.drawer_page, size: this.drawer_size}).then(response => (ResponseHandle(response)))
     },
     getCommentPrefix: function (item) {
       if (item.parent === item.root) {
@@ -64,13 +65,32 @@ export default {
       } else {
         return item.pub_username + ' @' + item.parent_username
       }
+    },
+    addNewComment: function (item) {
+      if (cookie('session_key') && window.localStorage.getItem(cookie('session_key'))) {
+        api.postComment(item.id, '回复: ' + item.pub_username)
+      } else {
+        this.$message('请先登录吧')
+      }
     }
   },
   mounted () {
+    const ResponseHandle = (response) => {
+      if (response.data) {
+        this.drawer_item = response.data
+      } else {
+        this.$notify({
+          title: '获取留言数据错误',
+          type: 'warning',
+          duration: 10000
+        })
+      }
+    }
+    api.get('comment/entry/' + this.drawer_item_id).then(response => (ResponseHandle(response)))
     this.getDrawerComment()
   },
   props: {
-    drawer_item: null
+    drawer_item_id: null
   }
 }
 </script>
@@ -82,9 +102,6 @@ export default {
   width:80%;
   border-radius:15px;
   background-color: chocolate;
-  right: 8%;
-  top:3px;
-  position: absolute;
 }
 
 .comment_content{
@@ -100,9 +117,11 @@ export default {
   text-align: left;
 }
 .comment_bottom{
-  font-size: 10px;
+  font-size: 13px;
 }.comment_bottom_item{
    margin-right: 20px;
+   margin-left: 5px;
+
  }
 .bg1{
   background-color: cornsilk;

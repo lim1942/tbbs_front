@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import index from '@/components/index'
 import BbsUser from '@/components/BbsUser'
 import BbsComment from '@/components/BbsComment'
+import BbsCommentDrawer from '@/components/BbsCommentDrawer'
 
 Vue.use(Router)
 
@@ -18,6 +19,12 @@ export default new Router({
           path: 'comment',
           name: 'comment',
           component: BbsComment
+        },
+        {
+          path: '/commentDrawer/:drawer_item_id',
+          name: 'commentDrawer',
+          component: BbsCommentDrawer,
+          props:true
         }
       ]
     },

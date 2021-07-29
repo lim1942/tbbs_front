@@ -1,7 +1,9 @@
 <template>
   <el-container>
     <!--侧边栏-->
-    <el-aside width="200px"><el-button onclick="window.location.reload();">刷新</el-button></el-aside>
+    <el-aside width="200px"><el-button onclick="window.location.reload();">刷新</el-button>
+      <el-button @click="goIndex">首页</el-button>
+    </el-aside>
     <el-container>
       <el-header>
         <BbsHeader :userinfo="userinfo"></BbsHeader>
@@ -33,6 +35,11 @@ export default {
   data () {
     return {
       userinfo: null
+    }
+  },
+  methods: {
+    goIndex () {
+      this.$router.push('/')
     }
   }
 }
