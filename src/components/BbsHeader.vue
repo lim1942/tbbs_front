@@ -7,7 +7,7 @@
       <div></div>
     </el-col>
     <el-col :span="4">
-      <el-button @click="addNewComment">发布留言</el-button>
+      <div>留言板</div>
     </el-col>
     <el-col :span="4">
       <div></div>
@@ -24,26 +24,12 @@
 </template>
 
 <script>
-import api from '@/api'
-import {cookie} from '@/tool/index'
 
 export default {
   name: 'BbsHeader',
   props: {
     userinfo: {
       default: null
-    }
-  },
-  methods: {
-    refresh: function () {
-      window.location.reload()
-    },
-    addNewComment: function () {
-      if (cookie('session_key')) {
-        api.postComment(null, '发布新留言')
-      } else {
-        this.$message('请先登录吧')
-      }
     }
   }
 }
